@@ -12,3 +12,5 @@ bcrypt
 email-validator
 pillow
 psycopg2-binary
+qrcode
+pillow
