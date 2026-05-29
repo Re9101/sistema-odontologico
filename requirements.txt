@@ -1,0 +1,13 @@
+﻿fastapi
+uvicorn
+python-multipart
+sqlalchemy
+jinja2
+python-dotenv
+itsdangerous
+starlette
+pyjwt
+passlib
+bcrypt
+email-validator
+pillow
