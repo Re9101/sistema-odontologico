@@ -1,0 +1,79 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg-body);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow: hidden;
+}
+.card {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 30px;
+    padding: 40px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 30px 60px var(--shadow-lg);
+    border: 1px solid var(--border);
+    animation: floatBox 3s ease-in-out infinite;
+}
+@keyframes floatBox {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+.card:hover {
+    animation: none;
+    transform: translateY(-5px);
+}
+.success-icon {
+    width: 80px;
+    height: 80px;
+    background: #28a745;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+.success-icon i { font-size: 40px; color: var(--text); }
+h2 { color: var(--text); font-size: 24px; margin-bottom: 10px; }
+h2 i { color: var(--accent); margin-right: 8px; }
+.info-box {
+    background: var(--bg-input);
+    border-radius: 15px;
+    padding: 20px;
+    margin: 25px 0;
+    text-align: left;
+}
+.info-item {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text-soft);
+}
+.info-item:last-child { border-bottom: none; }
+.info-item i { width: 25px; color: var(--accent); }
+.btn {
+    display: inline-block;
+    padding: 12px 24px;
+    background: var(--accent-gradient);
+    color: var(--text-on-accent);
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.btn:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(0,180,216,0.4); }
+@media (max-width: 550px) {
+    .card { padding: 25px; }
+    .success-icon { width: 60px; height: 60px; }
+    .success-icon i { font-size: 30px; }
+    h2 { font-size: 20px; }
+}

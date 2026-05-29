@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Clínica Odontológica - {% block titulo %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+    <script>
+        (function() {
+            var theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+<body>
+    {% if session.usuario_id %}
+
+    <!-- Botão menu mobile -->
+    <button class="menu-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-tooth"></i>
+                    <span>Sorriso<span class="highlight">Saudável</span></span>
+                </div>
+            </div>
+            <div class="user-info">
+                <div class="avatar"><i class="fas fa-user-md"></i></div>
+                <div class="user-details">
+                    <h4>{{ session.usuario_nome }}</h4>
+                    <p>{{ session.usuario_tipo }}</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{{ url_for('dashboard.dashboard') }}" class="nav-item"><i class="fas fa-chart-line"></i><span>Dashboard</span></a>
+                <a href="{{ url_for('clientes.clientes') }}" class="nav-item"><i class="fas fa-users"></i><span>Clientes</span></a>
+                <a href="{{ url_for('dentistas.dentistas') }}" class="nav-item"><i class="fas fa-user-md"></i><span>Dentistas</span></a>
+                <a href="{{ url_for('agendamentos.agendamentos') }}" class="nav-item"><i class="fas fa-calendar-alt"></i><span>Agendamentos</span></a>
+                <a href="{{ url_for('relatorios.relatorios') }}" class="nav-item"><i class="fas fa-chart-bar"></i><span>Relatórios</span></a>
+                <a href="{{ url_for('agendar_online.compartilhar_link') }}" class="nav-item"><i class="fas fa-share-alt"></i><span>Compartilhar</span></a>
+                <a href="{{ url_for('configuracoes.configuracoes') }}" class="nav-item"><i class="fas fa-cog"></i><span>Configurações</span></a>
+            </nav>
+            <div class="sidebar-footer">
+                <button onclick="toggleTheme()" class="theme-toggle-btn" id="themeToggle" title="Alternar tema">
+                    <i class="fas fa-moon" id="themeIcon"></i><span id="themeLabel">Escuro</span>
+                </button>
+                <a href="{{ url_for('auth.logout') }}" class="logout-btn"><i class="fas fa-sign-out-alt"></i><span>Sair</span></a>
+            </div>
+        </aside>
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="page-title"><h2>{% block page_title %}{% endblock %}</h2></div>
+                <div class="date-time"><i class="far fa-calendar-alt"></i><span id="currentDate"></span></div>
+            </div>
+            <div class="content-wrapper">
+                {% block conteudo %}{% endblock %}
+            </div>
+            <footer>
+                <p>🦷 Clínica Odontológica Sorriso Saudável - Sistema Profissional</p>
+            </footer>
+        </main>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+    {% block extra_js %}{% endblock %}
+    {% else %}
+        {% block login_content %}{% endblock %}
+    {% endif %}
+</body>
+</html>

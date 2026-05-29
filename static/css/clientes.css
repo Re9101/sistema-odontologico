@@ -1,0 +1,328 @@
+.page-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.btn-new {
+    background: var(--accent-gradient) !important;
+    color: var(--text) !important;
+    border: none !important;
+    padding: 6px 14px !important;
+    border-radius: 8px !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+    font-weight: 500 !important;
+    font-size: 12px !important;
+    transition: all 0.3s ease !important;
+    width: auto !important;
+    min-width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+.btn-new:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 5px 15px rgba(var(--accent-rgb), 0.3) !important;
+}
+
+.btn-new i {
+    font-size: 12px !important;
+}
+
+.table-container {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px;
+}
+
+.table th {
+    text-align: left;
+    padding: 15px;
+    background: var(--bg-input);
+    color: var(--text-table-header);
+    font-weight: 600;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-lighter);
+    color: var(--text-soft);
+}
+
+.cliente-row:hover {
+    background: var(--bg-input);
+}
+
+.email-cell {
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.acoes {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-editar, .btn-excluir {
+    padding: 6px 14px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-editar {
+    background: #ffc107;
+    color: var(--text-dark);
+}
+
+.btn-editar:hover {
+    background: #e0a800;
+    transform: translateY(-2px);
+}
+
+.btn-excluir {
+    background: #dc3545;
+    color: var(--text-on-accent);
+}
+
+.btn-excluir:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+}
+
+.alert {
+    padding: 12px 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.alert-success {
+    background: rgba(40,167,69,0.2);
+    color: #28a745;
+    border-left: 4px solid #28a745;
+}
+
+.alert-error {
+    background: rgba(220,53,69,0.2);
+    color: #dc3545;
+    border-left: 4px solid #dc3545;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-overlay);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: var(--bg-modal);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    border: 1px solid rgba(0, 180, 216, 0.3);
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.modal-header {
+    padding: 18px 22px;
+    background: var(--accent-gradient);
+    color: var(--text-on-accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 20px 20px 0 0;
+    position: sticky;
+    top: 0;
+}
+
+.close {
+    font-size: 28px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close:hover {
+    opacity: 0.8;
+    transform: scale(1.1);
+}
+
+.modal-body {
+    padding: 22px;
+}
+
+.modal-footer {
+    padding: 15px 22px;
+    background: var(--bg-overlay);
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    border-radius: 0 0 20px 20px;
+    position: sticky;
+    bottom: 0;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--text-table-header);
+    font-size: 13px;
+}
+
+.form-group label i {
+    color: var(--accent);
+    margin-right: 6px;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid var(--border-input);
+    border-radius: 12px;
+    background: var(--bg-input);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    background: var(--bg-input-focus);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.btn-save {
+    background: var(--accent-gradient);
+    color: var(--text-on-accent);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-save:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(var(--accent-rgb), 0.3);
+}
+
+.btn-cancel {
+    background: var(--bg-input-focus);
+    color: var(--text);
+    border: none;
+    padding: 10px 24px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+    background: var(--bg-hover-more);
+}
+
+@media (max-width: 600px) {
+    .table { min-width: 1px; }
+}
+
+.btn-new {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+}
+
+.table th, .table td {
+    padding: 10px 12px;
+    font-size: 12px;
+}
+
+.acoes {
+    flex-direction: column;
+    gap: 6px;
+}
+
+.btn-editar, .btn-excluir {
+    justify-content: center;
+    width: 100%;
+}
+
+.modal-content {
+    width: 95%;
+    max-height: 95vh;
+}
+
+.modal-header h3 {
+    font-size: 16px;
+}
+
+.modal-body {
+    padding: 18px;
+}
+
+.form-group input, .form-group textarea {
+    padding: 10px;
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    .table th, .table td {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+    .email-cell {
+        max-width: 120px;
+    }
+}

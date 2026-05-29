@@ -1,0 +1,92 @@
+.agenda-dentista {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 25px;
+    border: 1px solid var(--border);
+}
+.agenda-dentista h3 {
+    color: var(--text);
+    margin-bottom: 20px;
+}
+.agenda-dentista h3 i {
+    color: var(--accent);
+    margin-right: 8px;
+}
+
+.consultas-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.consulta-item {
+    background: var(--bg-input);
+    border-radius: 15px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+.consulta-data-hora {
+    display: flex;
+    gap: 15px;
+    color: var(--text);
+}
+.consulta-data-hora i {
+    color: var(--accent);
+    margin-right: 5px;
+}
+.consulta-paciente {
+    color: var(--text-soft);
+    flex: 1;
+}
+.consulta-paciente i {
+    color: var(--accent);
+    margin-right: 8px;
+}
+
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+}
+.status-agendada { background: rgba(255,193,7,0.2); color: #ffc107; }
+.status-realizada { background: rgba(40,167,69,0.2); color: #28a745; }
+.status-cancelada { background: rgba(220,53,69,0.2); color: #dc3545; }
+
+.btn-icon {
+    background: var(--border);
+    color: var(--accent);
+    padding: 8px 15px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 13px;
+}
+.btn-icon:hover { background: var(--accent); color: var(--text); }
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+}
+.empty-state i {
+    font-size: 64px;
+    color: rgba(var(--accent-rgb), 0.3);
+    margin-bottom: 15px;
+    display: block;
+}
+.empty-state h3 {
+    color: var(--text);
+    margin-bottom: 10px;
+}
+.empty-state p {
+    color: var(--text-dim);
+}
+
+@media (max-width: 768px) {
+    .consulta-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

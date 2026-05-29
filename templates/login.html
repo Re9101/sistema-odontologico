@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block titulo %}Login{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block login_content %}
+<div class="login-container">
+    <div class="login-box floating">
+        <div class="login-header">
+            <div class="login-icon">
+                <i class="fas fa-tooth"></i>
+            </div>
+            <h2>Clínica Sorriso Saudável</h2>
+            <p>Sistema de Gestão Odontológica</p>
+        </div>
+        
+        {% if erro %}
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            {{ erro }}
+        </div>
+        {% endif %}
+        
+        {% if msg %}
+        <div class="success-message">
+            <i class="fas fa-check-circle"></i>
+            {{ msg }}
+        </div>
+        {% endif %}
+        
+        <form method="POST" action="{{ url_for('auth.login') }}">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" name="username" placeholder="Usuário" required autofocus>
+            </div>
+            
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" name="senha" placeholder="Senha" required>
+            </div>
+            
+            <button type="submit" class="login-btn">
+                <i class="fas fa-sign-in-alt"></i>
+                Entrar no Sistema
+            </button>
+        </form>
+        
+        <div class="login-links">
+            <a href="#" onclick="mostrarRecuperarSenha()" class="forgot-password">
+                <i class="fas fa-question-circle"></i> Esqueci minha senha
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Recuperar Senha -->
+<div id="modalRecuperar" class="modal" style="display: none;">
+    <div class="modal-content" style="max-width: 400px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3><i class="fas fa-key"></i> Recuperar Senha</h3>
+            <span onclick="fecharModalRecuperar()" style="cursor: pointer; font-size: 24px;">&times;</span>
+        </div>
+        
+        <p style="margin-bottom: 20px; color: #666;">Digite seu <strong>email, celular ou usuário</strong> para receber uma nova senha.</p>
+        
+        <form method="POST" action="{{ url_for('auth.recuperar_senha') }}">
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="text" name="contato" placeholder="Email, Celular ou Usuário" required>
+            </div>
+            
+            <button type="submit" class="login-btn" style="margin-top: 10px;">
+                <i class="fas fa-paper-plane"></i> Enviar nova senha
+            </button>
+        </form>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Odontológica - Agendamento Confirmado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/agendamento_confirmado.css') }}">
+    <script>
+        (function() {
+            var theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+<body>
+<div class="card">
+    <div class="success-icon"><i class="fas fa-check"></i></div>
+    <h2><i class="fas fa-calendar-check"></i> Agendamento Confirmado!</h2>
+    <div class="info-box">
+        <div class="info-item"><i class="fas fa-user"></i> <span><strong>Paciente:</strong> {{ nome }}</span></div>
+        <div class="info-item"><i class="fas fa-calendar"></i> <span><strong>Data:</strong> {{ data }}</span></div>
+        <div class="info-item"><i class="fas fa-clock"></i> <span><strong>Horário:</strong> {{ hora }}</span></div>
+        <div class="info-item"><i class="fas fa-hashtag"></i> <span><strong>Código:</strong> #{{ consulta_id }}</span></div>
+    </div>
+    <a href="{{ url_for('agendar_online.agendar_online') }}" class="btn">Novo Agendamento</a>
+</div>
+</body>
+</html>

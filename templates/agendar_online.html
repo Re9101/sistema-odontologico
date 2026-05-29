@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica Odontológica - Agendamento Online</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/variables.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/agendar_online.css') }}">
+    <script>
+        (function() {
+            var theme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+        })();
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="card">
+        <div class="logo">
+            <div class="logo-icon"><i class="fas fa-tooth"></i></div>
+            <h1>Clínica Sorriso Saudável</h1>
+            <p>Agendamento Online de Consultas</p>
+        </div>
+        
+        <form id="formAgendamento" method="POST" action="{{ url_for('agendar_online.salvar_agendamento_online') }}">
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nome Completo *</label>
+                    <input type="text" name="nome" id="nome" required placeholder="Digite seu nome completo">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Telefone *</label>
+                    <input type="tel" name="telefone" id="telefone" required placeholder="(11) 99999-9999">
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-envelope"></i> Email</label>
+                <input type="email" name="email" id="email" placeholder="seu@email.com">
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-user-md"></i> Profissional *</label>
+                    <select name="dentista_id" id="dentista_id" required>
+                        <option value="">Selecione um dentista...</option>
+                        {% for d in dentistas %}
+                        <option value="{{ d[0] }}">{{ d[1] }} - {{ d[2] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tooth"></i> Procedimento</label>
+                    <select name="procedimento_id" id="procedimento_id">
+                        <option value="">Selecione...</option>
+                        {% for p in procedimentos %}
+                        <option value="{{ p[0] }}">{{ p[1] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label><i class="fas fa-calendar"></i> Data *</label>
+                    <input type="date" name="data" id="data" required min="{{ data_atual }}">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-clock"></i> Horário *</label>
+                    <input type="hidden" name="hora" id="hora_selecionada">
+                    <div id="horarios-container" class="horarios-grid">
+                        <div class="loading">Selecione um dentista e uma data</div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-comment"></i> Observações</label>
+                <textarea name="observacao" id="observacao" rows="2" placeholder="Alguma informação importante? (opcional)"></textarea>
+            </div>
+            <button type="submit" class="btn" id="btnSubmit">
+                <i class="fas fa-calendar-check"></i> Confirmar Agendamento
+            </button>
+        </form>
+    </div>
+</div>
+<script>
+    var BUSCAR_HORARIOS_URL = "{{ url_for('agendar_online.buscar_horarios') }}";
+</script>
+<script src="{{ url_for('static', filename='js/agendar_online.js') }}"></script>
+</body>
+</html>

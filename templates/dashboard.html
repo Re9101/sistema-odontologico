@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block titulo %}Dashboard{% endblock %}
+{% block page_title %}🏠 Dashboard{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="stats-grid">
+    <div class="stat-card floating-card">
+        <div class="stat-info">
+            <h3><i class="fas fa-users"></i> Total de Pacientes</h3>
+            <div class="number">{{ total_pacientes }}</div>
+        </div>
+        <div class="stat-icon">
+            <i class="fas fa-user-friends"></i>
+        </div>
+    </div>
+    
+    <div class="stat-card floating-card">
+        <div class="stat-info">
+            <h3><i class="fas fa-calendar-day"></i> Consultas Hoje</h3>
+            <div class="number">{{ consultas_hoje }}</div>
+        </div>
+        <div class="stat-icon">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+    </div>
+    
+    <div class="stat-card floating-card">
+        <div class="stat-info">
+            <h3><i class="fas fa-clock"></i> Total Agendadas</h3>
+            <div class="number">{{ consultas_agendadas }}</div>
+        </div>
+        <div class="stat-icon">
+            <i class="fas fa-hourglass-half"></i>
+        </div>
+    </div>
+    
+    <div class="stat-card floating-card">
+        <div class="stat-info">
+            <h3><i class="fas fa-user-md"></i> Dentistas Ativos</h3>
+            <div class="number">{{ total_dentistas }}</div>
+        </div>
+        <div class="stat-icon">
+            <i class="fas fa-tooth"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Consultas do Dia -->
+<div class="consultas-hoje">
+    <div class="section-header">
+        <h3><i class="fas fa-calendar-day"></i> Consultas de Hoje</h3>
+        <span class="data-atual">{{ data_atual }}</span>
+    </div>
+    
+    {% if proximas_consultas %}
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Horário</th>
+                        <th>Paciente</th>
+                        <th>Dentista</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consulta in proximas_consultas %}
+                    <tr class="consulta-row">
+                        <td>
+                            <span class="horario-badge">
+                                <i class="far fa-clock"></i> {{ consulta.hora }}
+                            </span>
+                         </td>
+                        <td class="paciente-nome">
+                            <strong>{{ consulta.paciente_nome }}</strong>
+                         </td>
+                        <td class="dentista-info">
+                            <i class="fas fa-user-md"></i> {{ consulta.dentista_nome }}
+                         </td>
+                        <td class="acoes">
+                            <a href="{{ url_for('dashboard.realizar_consulta', consulta_id=consulta.id) }}" 
+                               class="btn-realizar" 
+                               title="Realizar consulta"
+                               onclick="return confirm('✅ Confirmar realização desta consulta?')">
+                                <i class="fas fa-check-circle"></i> Realizar
+                            </a>
+                            <a href="{{ url_for('dashboard.cancelar_consulta', consulta_id=consulta.id) }}" 
+                               class="btn-cancelar" 
+                               title="Cancelar consulta"
+                               onclick="return confirm('❌ Tem certeza que deseja cancelar esta consulta?')">
+                                <i class="fas fa-times-circle"></i> Cancelar
+                            </a>
+                         </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <i class="fas fa-calendar-check"></i>
+            <h3>Nenhuma consulta agendada para hoje</h3>
+            <p>Clique em "Agendamentos" no menu lateral para agendar uma consulta</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- Resumo Rápido -->
+<div class="proximos-compromissos">
+    <div class="section-header">
+        <h3><i class="fas fa-chart-line"></i> Resumo Rápido</h3>
+    </div>
+    <div class="resumo-grid">
+        <div class="resumo-item">
+            <i class="fas fa-percent"></i>
+            <span>Taxa de ocupação: <strong>{{ taxa_ocupacao }}%</strong></span>
+        </div>
+        <div class="resumo-item">
+            <i class="fas fa-chart-line"></i>
+            <span>Crescimento: <strong>{{ crescimento_pacientes }}%</strong></span>
+        </div>
+        <div class="resumo-item">
+            <i class="fas fa-ban"></i>
+            <span>Cancelamentos: <strong>{{ taxa_cancelamento }}%</strong></span>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+
+{% block titulo %}Configurações{% endblock %}
+{% block page_title %}⚙️ Configurações do Sistema{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/configuracoes.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+{% if request.query_params.get('msg') %}
+<div class="alert alert-success">{{ request.query_params.get('msg') }}</div>
+{% endif %}
+{% if request.query_params.get('erro') %}
+<div class="alert alert-danger">{{ request.query_params.get('erro') }}</div>
+{% endif %}
+
+<div class="config-grid">
+    <div class="config-card">
+        <div class="config-card-header">
+            <i class="fas fa-key"></i>
+            <h3>Alterar Minha Senha</h3>
+        </div>
+        <div class="config-card-body">
+            <form method="POST" action="{{ url_for('configuracoes.trocar_senha') }}">
+                <div class="form-group">
+                    <label>Senha Atual</label>
+                    <input type="password" name="senha_atual" required>
+                </div>
+                <div class="form-group">
+                    <label>Nova Senha</label>
+                    <input type="password" name="nova_senha" required>
+                </div>
+                <div class="form-group">
+                    <label>Confirmar Nova Senha</label>
+                    <input type="password" name="confirmar_senha" required>
+                </div>
+                <button type="submit" class="btn-save">Alterar Senha</button>
+            </form>
+        </div>
+    </div>
+
+    {% if session.usuario_tipo == 'admin' %}
+    <div class="config-card">
+        <div class="config-card-header">
+            <i class="fas fa-user-plus"></i>
+            <h3>Criar Novo Usuário</h3>
+        </div>
+        <div class="config-card-body">
+            <form method="POST" action="{{ url_for('configuracoes.criar_usuario') }}">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Usuário</label>
+                        <input type="text" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Senha</label>
+                        <input type="password" name="senha" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" name="nome_completo" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email">
+                    </div>
+                    <div class="form-group">
+                        <label>Celular</label>
+                        <input type="text" name="celular">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select name="tipo">
+                        <option value="admin">Administrador</option>
+                        <option value="dentista">Dentista</option>
+                        <option value="recepcionista">Recepcionista</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-save">Criar Usuário</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% if session.usuario_tipo == 'admin' %}
+<div class="table-container">
+    <h3><i class="fas fa-users"></i> Usuários do Sistema</h3>
+    <div class="table-responsive">
+        <table class="table-modern">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Usuário</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Celular</th>
+                    <th>Tipo</th>
+                    <th>Status</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in usuarios %}
+                <tr>
+                    <td>{{ u[0] }}</td>
+                    <td><strong>{{ u[1] }}</strong></td>
+                    <td>{{ u[3] }}</td>
+                    <td>{{ u[4] or '—' }}</td>
+                    <td>{{ u[5] or '—' }}</td>
+                    <td><span class="badge-{{ u[2] }}">{{ u[2] }}</span></td>
+                    <td>{% if u[6] %}<span class="status-active">Ativo</span>{% else %}<span class="status-inactive">Inativo</span>{% endif %}</td>
+                    <td class="acoes">
+                        <button onclick='editarUsuario(
+                            {{ u[0] }},
+                            {{ u[1]|tojson|safe }},
+                            {{ u[3]|tojson|safe }},
+                            {{ (u[4] or '')|tojson|safe }},
+                            {{ (u[5] or '')|tojson|safe }},
+                            {{ u[2]|tojson|safe }},
+                            {{ u[6] }}
+                        )' class="btn-icon">Editar</button>
+                        {% if u[0] != session.usuario_id %}
+                        <a href="{{ url_for('configuracoes.excluir_usuario', user_id=u[0]) }}" class="btn-danger" onclick="return confirm('Excluir?')">Excluir</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Modal Editar -->
+<div id="modalEditar" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Editar Usuário</h3>
+            <span onclick="fecharModalEditar()" class="close">&times;</span>
+        </div>
+        <form id="formEditar" method="POST">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Login (nome de usuario)</label>
+                    <input type="text" id="edit_username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label>Nome Completo</label>
+                    <input type="text" id="edit_nome" name="nome_completo" required>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="edit_email" name="email">
+                </div>
+                <div class="form-group">
+                    <label>Celular</label>
+                    <input type="text" id="edit_celular" name="celular">
+                </div>
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select id="edit_tipo" name="tipo">
+                        <option value="admin">Administrador</option>
+                        <option value="dentista">Dentista</option>
+                        <option value="recepcionista">Recepcionista</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label><input type="checkbox" id="edit_ativo" name="ativo"> Usuário Ativo</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="fecharModalEditar()" class="btn-cancel">Cancelar</button>
+                <button type="submit" class="btn-save">Salvar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+<script>
+    var EDITAR_USUARIO_URL = "{{ url_for('configuracoes.editar_usuario', user_id=0) }}";
+</script>
+<script src="{{ url_for('static', filename='js/configuracoes.js') }}"></script>
+{% endblock %}

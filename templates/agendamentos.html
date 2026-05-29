@@ -1,0 +1,127 @@
+{% extends "base.html" %}
+
+{% block titulo %}Agendamentos{% endblock %}
+{% block page_title %}📅 Agenda de Consultas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/agendamentos.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+{% if request.query_params.get('msg') %}
+<div class="alert alert-success">
+    <i class="fas fa-check-circle"></i> {{ request.query_params.get('msg') }}
+</div>
+{% endif %}
+{% if request.query_params.get('erro') %}
+<div class="alert alert-danger">
+    <i class="fas fa-exclamation-circle"></i> {{ request.query_params.get('erro') }}
+</div>
+{% endif %}
+
+<div class="agenda-header">
+    <div class="date-nav">
+        <a href="{{ url_for('agendamentos.agendamentos', data=proximo_dia_anterior) }}" class="date-btn">
+            <i class="fas fa-chevron-left"></i>
+        </a>
+        <div class="current-date">
+            <i class="fas fa-calendar-day"></i>
+            <input type="date" id="datePicker" value="{{ data_atual }}" class="date-picker">
+        </div>
+        <a href="{{ url_for('agendamentos.agendamentos', data=proximo_dia_posterior) }}" class="date-btn">
+            <i class="fas fa-chevron-right"></i>
+        </a>
+        <a href="{{ url_for('agendamentos.agendamentos') }}" class="today-btn">Hoje</a>
+    </div>
+    <button onclick="abrirModalAgendamento()" class="btn-new">
+        <i class="fas fa-plus"></i> Nova Consulta
+    </button>
+</div>
+
+<div class="consultas-list">
+    {% if consultas %}
+        {% for c in consultas %}
+        <div class="consulta-card floating-card status-{{ c[4] }}">
+            <div class="consulta-time">
+                <i class="far fa-clock"></i>
+                <strong>{{ c[2].split()[1] if c[2] else '--:--' }}</strong>
+            </div>
+            <div class="consulta-info">
+                <div><i class="fas fa-user"></i> <strong>Paciente:</strong> {{ c[1] }}</div>
+                <div><i class="fas fa-user-md"></i> <strong>Dentista:</strong> {{ c[5] }}</div>
+                {% if c[3] %}
+                <div><i class="fas fa-tooth"></i> <strong>Dente:</strong> {{ c[3] }}</div>
+                {% endif %}
+            </div>
+            <div class="consulta-actions">
+                <button onclick="realizarConsulta({{ c[0] }})" class="action-btn success" title="Realizar">
+                    <i class="fas fa-check"></i>
+                </button>
+                <button onclick="cancelarConsulta({{ c[0] }})" class="action-btn danger" title="Cancelar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="empty-state floating-card">
+            <i class="fas fa-calendar-alt"></i>
+            <h3>Nenhuma consulta agendada</h3>
+            <p>Clique em "Nova Consulta" para agendar um horário</p>
+        </div>
+    {% endif %}
+</div>
+
+<!-- MODAL DE AGENDAMENTO -->
+<div id="modalAgendamento" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-calendar-plus"></i> Nova Consulta</h3>
+            <span class="close" onclick="fecharModalAgendamento()">&times;</span>
+        </div>
+        <form method="POST" action="{{ url_for('agendamentos.novo_agendamento') }}">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nome do Paciente *</label>
+                    <input type="text" name="nome_paciente" required placeholder="Digite o nome completo do paciente">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-user-md"></i> Dentista *</label>
+                    <select name="dentista_id" required>
+                        <option value="">Selecione um dentista</option>
+                        {% for d in dentistas %}
+                        <option value="{{ d[0] }}">{{ d[1] }} - {{ d[2] }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label><i class="fas fa-calendar"></i> Data *</label>
+                        <input type="date" name="data" id="dataAgendamento" required>
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-clock"></i> Hora *</label>
+                        <input type="time" name="hora" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tooth"></i> Dente/Região</label>
+                    <input type="text" name="dente_regiao" placeholder="Ex: dente 46, região anterior...">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="fecharModalAgendamento()">Cancelar</button>
+                <button type="submit" class="btn-save">Agendar Consulta</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var AGENDAMENTOS_URL = "{{ url_for('agendamentos.agendamentos') }}";
+    var REALIZAR_CONSULTA_URL = "{{ url_for('dashboard.realizar_consulta', consulta_id=0) }}";
+    var CANCELAR_CONSULTA_URL = "{{ url_for('dashboard.cancelar_consulta', consulta_id=0) }}";
+</script>
+<script src="{{ url_for('static', filename='js/agendamentos.js') }}"></script>
+{% endblock %}

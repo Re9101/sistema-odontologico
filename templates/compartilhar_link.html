@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block titulo %}Compartilhar Link{% endblock %}
+{% block page_title %}🔗 Compartilhar Agendamento Online{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/compartilhar.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="share-container">
+    <div class="share-card">
+        <div class="share-icon">
+            <i class="fas fa-share-alt"></i>
+        </div>
+        <h3>Link para Agendamento Online</h3>
+        <p>Compartilhe este link com seus pacientes para agendamento online</p>
+        
+        <div class="link-box">
+            <input type="text" id="linkInput" value="{{ link }}" readonly>
+            <button onclick="copiarLink()" class="btn-copy">
+                <i class="fas fa-copy"></i> Copiar
+            </button>
+        </div>
+        
+        <div class="qr-code">
+            <p><i class="fas fa-qrcode"></i> Escaneie o QR Code:</p>
+            <div id="qrCode" class="qr-container"></div>
+        </div>
+        
+        <div class="info-note">
+            <i class="fas fa-info-circle"></i>
+            Pacientes acessam este link, escolhem profissional, data e horário disponíveis.
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+<script>
+    var QR_TEXT = "{{ link }}";
+</script>
+<script src="{{ url_for('static', filename='js/compartilhar.js') }}"></script>
+{% endblock %}

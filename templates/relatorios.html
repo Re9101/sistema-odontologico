@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block titulo %}Relatórios{% endblock %}
+{% block page_title %}📊 Relatórios e Estatísticas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/relatorios.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+<!-- Filtros -->
+<div class="filtros-relatorios">
+    <div class="filtro-group">
+        <label>Período:</label>
+        <select id="periodo" onchange="carregarDados()">
+            <option value="7">Últimos 7 dias</option>
+            <option value="30" selected>Últimos 30 dias</option>
+            <option value="90">Últimos 90 dias</option>
+            <option value="365">Último ano</option>
+        </select>
+    </div>
+    <div class="filtro-group">
+        <label>Data Início:</label>
+        <input type="date" id="data_inicio">
+    </div>
+    <div class="filtro-group">
+        <label>Data Fim:</label>
+        <input type="date" id="data_fim">
+    </div>
+    <button onclick="aplicarFiltro()" class="btn-filtrar"><i class="fas fa-filter"></i> Filtrar</button>
+  <button onclick="exportarExcel()" class="btn-print">
+    <i class="fas fa-print"></i>
+    Imprimir Relatório
+</button>
+</div>
+
+<!-- Cards Resumo -->
+<div class="resumo-grid">
+    <div class="resumo-card">
+        <div class="resumo-icon" style="background: linear-gradient(135deg, #00b4d8, #0077b6);">
+            <i class="fas fa-user-plus"></i>
+        </div>
+        <div class="resumo-info">
+            <h3>Novos Pacientes</h3>
+            <div class="resumo-numero" id="novosPacientes">0</div>
+            <small id="crescimentoPacientes">+0%</small>
+        </div>
+    </div>
+    <div class="resumo-card">
+        <div class="resumo-icon" style="background: linear-gradient(135deg, #28a745, #20c997);">
+            <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="resumo-info">
+            <h3>Consultas Realizadas</h3>
+            <div class="resumo-numero" id="consultasRealizadas">0</div>
+            <small id="crescimentoConsultas">+0%</small>
+        </div>
+    </div>
+    <div class="resumo-card">
+        <div class="resumo-icon" style="background: linear-gradient(135deg, #ffc107, #fd7e14);">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="resumo-info">
+            <h3>Taxa de Ocupação</h3>
+            <div class="resumo-numero" id="taxaOcupacao">0%</div>
+            <small>Dos dentistas</small>
+        </div>
+    </div>
+    <div class="resumo-card">
+        <div class="resumo-icon" style="background: linear-gradient(135deg, #dc3545, #c82333);">
+            <i class="fas fa-times-circle"></i>
+        </div>
+        <div class="resumo-info">
+            <h3>Cancelamentos</h3>
+            <div class="resumo-numero" id="cancelamentos">0</div>
+            <small id="taxaCancelamento">0% das consultas</small>
+        </div>
+    </div>
+</div>
+
+<!-- GRÁFICOS -->
+<div class="graficos-grid">
+    <div class="grafico-card">
+        <h3><i class="fas fa-chart-line"></i> Crescimento de Pacientes</h3>
+        <canvas id="graficoPacientes" height="180"></canvas>
+    </div>
+    <div class="grafico-card">
+        <h3><i class="fas fa-chart-bar"></i> Consultas por Dia</h3>
+        <canvas id="graficoConsultas" height="180"></canvas>
+    </div>
+    <div class="grafico-card">
+        <h3><i class="fas fa-chart-pie"></i> Distribuição por Dentista</h3>
+        <canvas id="graficoDentistas" height="180"></canvas>
+    </div>
+    <div class="grafico-card">
+        <h3><i class="fas fa-chart-line"></i> Tendência Mensal</h3>
+        <canvas id="graficoTendencia" height="180"></canvas>
+    </div>
+</div>
+
+<!-- Tabela Novos Pacientes -->
+<div class="tabela-container">
+    <h3><i class="fas fa-table"></i> Novos Pacientes por Mês</h3>
+    <div class="table-responsive">
+        <table id="tabelaPacientesMes">
+            <thead><tr><th>Mês/Ano</th><th>Novos Pacientes</th><th>Variação</th></tr></thead>
+            <tbody id="corpoTabelaPacientes"><tr><td colspan="3" class="text-center">Carregando...</td></tr></tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Tabela Top Pacientes -->
+<div class="tabela-container">
+    <h3><i class="fas fa-star"></i> Pacientes que Mais Agendaram</h3>
+    <div class="table-responsive">
+        <table id="tabelaTopPacientes">
+            <thead><tr><th>Paciente</th><th>Total Consultas</th><th>Última Consulta</th></tr></thead>
+            <tbody id="corpoTopPacientes"><tr><td colspan="3" class="text-center">Carregando...</td></tr></tbody>
+        </table>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    var API_URL = "{{ url_for('relatorios.api_relatorios_dados') }}";
+    var PRINT_URL = "{{ url_for('relatorios.relatorios_imprimir') }}";
+</script>
+<script src="{{ url_for('static', filename='js/relatorios.js') }}"></script>
+
+<script>
+    var hoje = new Date();
+    var inicioMes = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    document.getElementById('data_inicio').value = inicioMes.toISOString().split('T')[0];
+    document.getElementById('data_fim').value = hoje.toISOString().split('T')[0];
+    carregarDados();
+</script>
+{% endblock %}

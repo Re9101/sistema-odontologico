@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block titulo %}Relatório - Clínica Sorriso Saudável{% endblock %}
+{% block page_title %}📄 Relatório{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/relatorios_imprimir.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+<button class="btn-print" onclick="window.print()">
+    <i class="fas fa-print"></i> Imprimir / Salvar PDF
+</button>
+<button class="btn-back" onclick="window.history.back()">
+    <i class="fas fa-arrow-left"></i> Voltar para Relatórios
+</button>
+
+<div class="relatorio-container">
+    <div class="header">
+        <h1><i class="fas fa-tooth"></i> Clínica Sorriso Saudável</h1>
+        <p>Relatório Completo do Sistema</p>
+    </div>
+    
+    <div class="periodo">
+        <div class="periodo-item">
+            <i class="fas fa-calendar-alt"></i>
+            <span><strong>Data inicial:</strong> {{ inicio.strftime('%d/%m/%Y') }}</span>
+        </div>
+        <div class="periodo-item">
+            <i class="fas fa-calendar-check"></i>
+            <span><strong>Data final:</strong> {{ fim.strftime('%d/%m/%Y') }}</span>
+        </div>
+        <div class="periodo-item">
+            <i class="fas fa-clock"></i>
+            <span><strong>Gerado em:</strong> <strong><span id="geradoEm"></span></strong></span>
+        </div>
+    </div>
+    
+    <div class="stats-grid">
+        <div class="stat-card">
+            <i class="fas fa-calendar-alt"></i>
+            <div class="number">{{ total_consultas }}</div>
+            <div class="label">Total de Consultas</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-check-circle"></i>
+            <div class="number">{{ consultas_realizadas }}</div>
+            <div class="label">Consultas Realizadas</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-clock"></i>
+            <div class="number">{{ consultas_agendadas }}</div>
+            <div class="label">Consultas Agendadas</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-times-circle"></i>
+            <div class="number">{{ consultas_canceladas }}</div>
+            <div class="label">Consultas Canceladas</div>
+        </div>
+        <div class="stat-card">
+            <i class="fas fa-users"></i>
+            <div class="number">{{ total_pacientes }}</div>
+            <div class="label">Novos Pacientes</div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2><i class="fas fa-list"></i> Consultas no Período</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Paciente</th>
+                    <th>Dentista</th>
+                    <th>Data/Hora</th>
+                    <th>Status</th>
+                    <th>Cadastro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in consultas %}
+                <tr>
+                    <td>{{ c[0] }}</td>
+                    <td>{{ c[1] }}</td>
+                    <td>{{ c[2] or '-' }}</td>
+                    <td>{{ c[3].split()[0] + ' ' + c[3].split()[1][:5] if c[3] else '-' }}</td>
+                    <td class="status-{{ c[4] }}">{{ c[4] }}</td>
+                    <td>{{ c[5].split()[0] if c[5] else '-' }}</td>
+                 </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="section">
+        <h2><i class="fas fa-user-plus"></i> Pacientes Cadastrados</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Data Cadastro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in pacientes %}
+                <tr>
+                    <td>{{ p[0] }}</td>
+                    <td>{{ p[1] }}</td>
+                    <td>{{ p[2] or '-' }}</td>
+                    <td>{{ p[3].split()[0] if p[3] else '-' }}</td>
+                 </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="footer">
+        <p>Relatório gerado automaticamente pelo Sistema da Clínica Sorriso Saudável</p>
+        <p>© 2024 - Todos os direitos reservados</p>
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/relatorios_imprimir.js') }}"></script>
+{% endblock %}

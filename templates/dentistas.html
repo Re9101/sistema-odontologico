@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block titulo %}Dentistas{% endblock %}
+{% block page_title %}🦷 Dentistas{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dentistas.css') }}">
+{% endblock %}
+
+{% block conteudo %}
+
+{% if request.query_params.get('msg') %}
+<div class="alert alert-success">
+    <i class="fas fa-check-circle"></i> {{ request.query_params.get('msg') }}
+</div>
+{% endif %}
+{% if request.query_params.get('erro') %}
+<div class="alert alert-error">
+    <i class="fas fa-exclamation-circle"></i> {{ request.query_params.get('erro') }}
+</div>
+{% endif %}
+
+<div class="page-header">
+    <button onclick="abrirModalNovo()" class="btn-new">
+        <i class="fas fa-plus"></i> Novo Dentista
+    </button>
+</div>
+
+<div class="table-container">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>CRO</th>
+                    <th>Especialidade</th>
+                    <th>Telefone</th>
+                    <th>Email</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for d in dentistas %}
+                <tr class="dentista-row">
+                    <td><strong>{{ d[1] }}</strong></td>
+                    <td>{{ d[2] }}</td>
+                    <td>{{ d[3] or '-' }}</td>
+                    <td>{{ d[4] or '-' }}</td>
+                    <td>{{ d[5] or '-' }}</td>
+                    <td class="acoes">
+                        <button onclick='abrirModalEditar(
+                            {{ d[0] }},
+                            {{ d[1]|tojson|safe }},
+                            {{ d[2]|tojson|safe }},
+                            {{ (d[3] or '')|tojson|safe }},
+                            {{ (d[4] or '')|tojson|safe }},
+                            {{ (d[5] or '')|tojson|safe }}
+                        )' class="btn-editar">
+                          <i class="fas fa-edit"></i> Editar
+                        </button>
+                        <button onclick="excluirDentista({{ d[0] }})" class="btn-excluir">
+                          <i class="fas fa-trash-alt"></i> Excluir
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- MODAL NOVO DENTISTA -->
+<div id="modalNovo" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-user-md"></i> Novo Dentista</h3>
+            <span class="close" onclick="fecharModalNovo()">&times;</span>
+        </div>
+        <form method="POST" action="{{ url_for('dentistas.novo_dentista') }}">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nome Completo *</label>
+                    <input type="text" name="nome" required placeholder="Digite o nome completo">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> CRO *</label>
+                    <input type="text" name="cro" required placeholder="Ex: SP-12345">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tooth"></i> Especialidade</label>
+                    <input type="text" name="especialidade" placeholder="Ex: Ortodontia, Implantodontia...">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Telefone</label>
+                    <input type="tel" name="telefone" placeholder="(11) 99999-9999">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" name="email" placeholder="dentista@email.com">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="fecharModalNovo()">Cancelar</button>
+                <button type="submit" class="btn-save">Salvar Dentista</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- MODAL EDITAR DENTISTA -->
+<div id="modalEditar" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-edit"></i> Editar Dentista</h3>
+            <span class="close" onclick="fecharModalEditar()">&times;</span>
+        </div>
+        <form method="POST" action="" id="formEditar">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label><i class="fas fa-user"></i> Nome Completo *</label>
+                    <input type="text" name="nome" id="edit_nome" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-id-card"></i> CRO *</label>
+                    <input type="text" name="cro" id="edit_cro" required>
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-tooth"></i> Especialidade</label>
+                    <input type="text" name="especialidade" id="edit_especialidade">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-phone"></i> Telefone</label>
+                    <input type="tel" name="telefone" id="edit_telefone">
+                </div>
+                <div class="form-group">
+                    <label><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" name="email" id="edit_email">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="fecharModalEditar()">Cancelar</button>
+                <button type="submit" class="btn-save">Atualizar Dentista</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var EDITAR_DENTISTA_URL = "{{ url_for('dentistas.editar_dentista', dentista_id=0) }}";
+    var EXCLUIR_DENTISTA_URL = "{{ url_for('dentistas.excluir_dentista', dentista_id=0) }}";
+</script>
+<script src="{{ url_for('static', filename='js/dentistas.js') }}"></script>
+{% endblock %}
